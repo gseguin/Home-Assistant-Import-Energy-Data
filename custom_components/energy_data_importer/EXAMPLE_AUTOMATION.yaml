@@ -1,0 +1,206 @@
+# Example automations for using the Energy Data Importer integration
+# Uses the recommended directory structure:
+#   /config/data/imports/raw/      - Place raw data files here
+#   /config/data/imports/processed/ - Successfully processed files
+#   /config/data/imports/failed/    - Failed imports
+#   /config/data/energy/csv/        - Generated CSV files
+
+# Example 1: Basic data preparation
+automation:
+  - id: prepare_energy_data
+    alias: Prepare Energy Data
+    description: Prepare energy data from Eneco for import
+    mode: single
+    trigger:
+      - platform: event
+        event_type: folder_watcher
+        event_data:
+          path: /config/data/imports/raw/
+          file: "*.csv"
+    action:
+      - service: energy_data_importer.prepare_data
+        data:
+          data_source: "Eneco"
+          input_file: "/config/data/imports/raw/*.csv"
+          output_prefix: "eneco"
+
+# Example 2: Import prepared data into SQLite
+automation:
+  - id: import_energy_data
+    alias: Import Energy Data
+    description: Import prepared CSV files into Home Assistant database
+    mode: single
+    trigger:
+      - platform: event
+        event_type: folder_watcher
+        event_data:
+          path: /config/data/energy/csv/
+          file: "*_high_resolution.csv"
+    action:
+      - service: energy_data_importer.import_data
+        data:
+          db_type: "sqlite"
+          sqlite_db: "/config/home-assistant_v2.db"
+          input_file: "/config/data/energy/csv/*_resolution.csv"
+
+# Example 3: Complete workflow with notifications and file management
+automation:
+  - id: energy_import_workflow
+    alias: Energy Import Complete Workflow
+    description: Prepare and import energy data with notifications and file management
+    mode: single
+    trigger:
+      - platform: mqtt
+        topic: energy/import/trigger
+    action:
+      # Step 1: Notify start
+      - service: notify.notify
+        data:
+          title: "Energy Import Started"
+          message: "Starting energy data preparation..."
+
+      # Step 2: Prepare data from raw directory
+      - service: energy_data_importer.prepare_data
+        data:
+          data_source: "{{ trigger.payload_json.source }}"
+          input_file: "/config/data/imports/raw/{{ trigger.payload_json.filename }}"
+          output_prefix: "{{ trigger.payload_json.meter_id }}"
+
+      # Step 3: Wait for preparation to complete
+      - delay:
+          seconds: 10
+
+      # Step 4: Import data from CSV directory
+      - service: energy_data_importer.import_data
+        data:
+          db_type: "sqlite"
+          sqlite_db: "/config/home-assistant_v2.db"
+          input_file: "/config/data/energy/csv/*_high_resolution.csv"
+
+      # Step 5: Move processed raw file (requires shell_command or similar)
+      # - service: shell_command.move_processed_file
+      #   data:
+      #     filename: "{{ trigger.payload_json.filename }}"
+
+      # Step 6: Notify completion
+      - service: notify.notify
+        data:
+          title: "Energy Import Completed"
+          message: "Energy data has been successfully imported!"
+
+# Example 4: Schedule weekly import
+automation:
+  - id: weekly_energy_import
+    alias: Weekly Energy Import
+    description: Import energy data every Sunday from raw directory
+    mode: single
+    trigger:
+      - platform: time
+        at: "02:00:00"
+    condition:
+      - condition: time
+        weekday:
+          - sun
+    action:
+      - service: energy_data_importer.prepare_data
+        data:
+          data_source: "Fluvius"
+          input_file: "/config/data/imports/raw/*.csv"
+
+      - delay:
+          seconds: 30
+
+      - service: energy_data_importer.import_data
+        data:
+          db_type: "sqlite"
+          sqlite_db: "/config/home-assistant_v2.db"
+          input_file: "/config/data/energy/csv/*_resolution.csv"
+
+# Example 5: Using with MariaDB
+script:
+  import_energy_mariadb:
+    alias: Import Energy Data (MariaDB)
+    description: Import energy data into MariaDB database
+    mode: single
+    sequence:
+      - service: energy_data_importer.prepare_data
+        data:
+          data_source: "SolarEdge"
+          input_file: "/config/data/imports/raw/solar_*.csv"
+          output_prefix: "solar"
+
+      - delay:
+          seconds: 15
+
+      - service: energy_data_importer.import_data
+        data:
+          db_type: "mariadb"
+          mariadb_host: "192.168.1.100"
+          mariadb_user: "homeassistant"
+          mariadb_password: !secret mariadb_password
+          mariadb_database: "homeassistant"
+          input_file: "/config/data/energy/csv/solar_*_resolution.csv"
+
+# Example 6: Conditional import based on file type with organized directories
+automation:
+  - id: smart_energy_import
+    alias: Smart Energy Import
+    description: Import different energy sources based on file pattern
+    mode: parallel
+    trigger:
+      - platform: event
+        event_type: folder_watcher
+        event_data:
+          path: /config/data/imports/raw/
+    action:
+      - choose:
+          # Solar data
+          - conditions:
+              - condition: template
+                value_template: "{{ 'solar' in trigger.event.data.file }}"
+            sequence:
+              - service: energy_data_importer.prepare_data
+                data:
+                  data_source: "SolarEdge"
+                  input_file: "/config/data/imports/raw/{{ trigger.event.data.file }}"
+
+          # Grid data
+          - conditions:
+              - condition: template
+                value_template: "{{ 'grid' in trigger.event.data.file }}"
+            sequence:
+              - service: energy_data_importer.prepare_data
+                data:
+                  data_source: "Fluvius"
+                  input_file: "/config/data/imports/raw/{{ trigger.event.data.file }}"
+
+          # Gas data
+          - conditions:
+              - condition: template
+                value_template: "{{ 'gas' in trigger.event.data.file }}"
+            sequence:
+              - service: energy_data_importer.prepare_data
+                data:
+                  data_source: "Fluvius"
+                  input_file: "/config/data/imports/raw/{{ trigger.event.data.file }}"
+
+      # Import all prepared files from CSV directory
+      - delay:
+          seconds: 20
+      - service: energy_data_importer.import_data
+        data:
+          db_type: "sqlite"
+          sqlite_db: "/config/home-assistant_v2.db"
+          input_file: "/config/data/energy/csv/*_resolution.csv"
+
+# Example 7: File management helper (requires shell_command integration)
+# Add to configuration.yaml:
+# shell_command:
+#   move_to_processed: mv /config/data/imports/raw/{{ filename }} /config/data/imports/processed/
+#   move_to_failed: mv /config/data/imports/raw/{{ filename }} /config/data/imports/failed/
+#
+# Then use in automations:
+# - service: shell_command.move_to_processed
+#   data:
+#     filename: "my_file.csv"
+

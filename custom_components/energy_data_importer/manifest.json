@@ -1,0 +1,16 @@
+{
+  "domain": "energy_data_importer",
+  "name": "Energy Data Importer",
+  "codeowners": ["@patrickvorgers"],
+  "config_flow": true,
+  "documentation": "https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Data",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Data/issues",
+  "requirements": [
+    "pandas>=2.0.0",
+    "tzlocal>=5.0",
+    "mysql-connector-python>=8.0.0"
+  ],
+  "version": "1.0.0"
+}

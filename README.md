@@ -1,5 +1,7 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a name="readme-top"></a>
+
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
 *** that would make this better, please fork the repo and create a pull request
@@ -58,7 +60,9 @@ Import historical energy/water data from external datasources into Home Assistan
 </details>
 
 <!-- ABOUT THE PROJECT -->
+
 <a name="about-the-project"></a>
+
 ## About The Project
 
 ![2019](https://user-images.githubusercontent.com/10108665/230038399-61886f6c-ba39-4343-8b96-0fb779b39ba2.JPG)
@@ -77,6 +81,7 @@ The latest version of the script is independent from the energy provider and mak
 It adds the statistics data that is missing in Home Assistant and adjusts the existing data.
 
 The import process consists of three straightforward steps:
+
 1. **Data preparation**  
    Prepare the data in the correct CSV file format (`Epoch Unix Timestamp`, `sensor value`).
    For several energy providers conversion scripts exist that convert the energy provider specific format to the needed format.
@@ -98,6 +103,7 @@ The import process consists of three straightforward steps:
 ![2015](https://user-images.githubusercontent.com/10108665/230038421-3833847a-79a4-40a2-8937-2b5f2ae3f3cc.JPG)
 
 ### Features
+
 <ul>
   <li>Correctly imports historical energy, gas, and water data into Home Assistant</li>
   <li>Supports a combination of low- and high-resolution data</li>
@@ -116,17 +122,53 @@ The import process consists of three straightforward steps:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
+
 <a name="getting-started"></a>
+
 ## Getting Started
+
+### Installation Options
+
+You can use this project in two ways:
+
+1. **HACS Integration (Recommended)** - Install as a Home Assistant custom integration for easy service-based usage
+2. **Manual/Script Method** - Use the Python scripts directly (original method)
+
+#### Option 1: HACS Integration
+
+The HACS integration provides a user-friendly way to import energy data through Home Assistant services:
+
+- ✅ Easy installation through HACS
+- ✅ Service-based interface for automation
+- ✅ No need to manually run Python scripts
+- ✅ Integrated with Home Assistant UI
+
+**Installation:**
+
+1. Install via HACS (see [HACS_INSTALLATION.md](HACS_INSTALLATION.md))
+2. Add the integration via Settings → Devices & Services
+3. Use the `energy_data_importer.prepare_data` and `energy_data_importer.import_data` services
+
+For detailed instructions, see:
+
+- [HACS Installation Guide](HACS_INSTALLATION.md)
+- [Integration README](custom_components/energy_data_importer/README.md)
+- [Example Automations](custom_components/energy_data_importer/EXAMPLE_AUTOMATION.yaml)
+
+#### Option 2: Manual/Script Method
+
+Follow the original method using Python scripts directly. Continue reading below for the complete workflow.
 
 ### Disclaimer
 
 Importing historical energy data into Home Assistant is not simple and requires some technical knowledge. It alters the database of Home Assistant so be sure that you <u><b>always</b></u> have a recent backup of your Home Assistant data!
 
 <a name="How-to"></a>
+
 ### How-to
 
 #### Source data preparation
+
 - Check the [Datasources documentation](Datasources) for more information about the data preparation scripts.
 - Check whether a script/how-to exists for your provider (datasources directory)
   - Script/how-to exists:
@@ -217,6 +259,7 @@ Importing historical energy data into Home Assistant is not simple and requires 
         - Not needed in case that there is only one resolution available.
 
 #### Database
+
 - Determine the type of database that the Home Assistant installation uses and continue with that specific how-to. The standard installation of Home Assistant uses SQLite.
   - [SQLite how-to](Database/SQLite)
   - [MariaDB how-to](Database/MariaDB)
@@ -224,7 +267,9 @@ Importing historical energy data into Home Assistant is not simple and requires 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Authors -->
+
 <a name="authors"></a>
+
 ## Authors
 
 The project initially began as a tool for importing historical data for Toon (Eneco) into Home Assistant. In early 2024, the project scope expanded, enabling the import of data from various energy providers.
@@ -235,58 +280,65 @@ Please share scripts or how-to guides if you have built an integration with a ne
 
 ### Project technical leads
 
-* Patrick Vorgers (the Netherlands)
+- Patrick Vorgers (the Netherlands)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Contributions -->
+
 <a name="contributions"></a>
+
 ## Contributions are welcome
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
+
 ### All contributors
 
-* Nick de Wijer (https://github.com/ndewijer)
-  * Initial implementation: GreenChoice
-  * Sample files for: SolarEdge
-* vGelder (https://github.com/vGelder)
-  * Sample files for: Oxxio
-  * Sample files for: Liander
-  * Sample files for: Engie
-* Jaap P. (https://github.com/AJediIAm)
-  * Implementation: P1Mon (ZTATZ)
-* Minze Tolsman (https://github.com/miezie)
-  * Implementation: VanOns
-* Slyoldfox (https://github.com/slyoldfox)
-  * Implementation: Fluvius (Dutch version)
-* TylonHH (https://github.com/TylonHH)
-  * Implementation: EnergyControl (app)
-* Nikolaj Hendel (https://github.com/nikolajhendel)
-  * How to for: iSolarCloud (Sungrow)
-  * Sample files for: iSolarCloud (Sungrow)
-* Bernardo Bandos (https://github.com/jbbandos)
-  * Implementation: Fluvius (English version)
-  * Inital implementation: Inital value for recalculation
-* Thomas HF Wright (https://github.com/ThomasHFWright)
-  * Initial Implementation: E-Redes
-* Julius (https://github.com/juliu-s)
-  * Initial Implementation: DSMR-reader
+- Nick de Wijer (https://github.com/ndewijer)
+  - Initial implementation: GreenChoice
+  - Sample files for: SolarEdge
+- vGelder (https://github.com/vGelder)
+  - Sample files for: Oxxio
+  - Sample files for: Liander
+  - Sample files for: Engie
+- Jaap P. (https://github.com/AJediIAm)
+  - Implementation: P1Mon (ZTATZ)
+- Minze Tolsman (https://github.com/miezie)
+  - Implementation: VanOns
+- Slyoldfox (https://github.com/slyoldfox)
+  - Implementation: Fluvius (Dutch version)
+- TylonHH (https://github.com/TylonHH)
+  - Implementation: EnergyControl (app)
+- Nikolaj Hendel (https://github.com/nikolajhendel)
+  - How to for: iSolarCloud (Sungrow)
+  - Sample files for: iSolarCloud (Sungrow)
+- Bernardo Bandos (https://github.com/jbbandos)
+  - Implementation: Fluvius (English version)
+  - Inital implementation: Inital value for recalculation
+- Thomas HF Wright (https://github.com/ThomasHFWright)
+  - Initial Implementation: E-Redes
+- Julius (https://github.com/juliu-s)
+  - Initial Implementation: DSMR-reader
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
+
 <a name="roadmap"></a>
+
 ## Roadmap
 
 - [ ] Support more datasources
-- [X] Support MariaDB or provide workaround 
+- [x] Support MariaDB or provide workaround
 
 See the [open issues](https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Data/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
+
 <a name="contact"></a>
+
 ## Contact
 
 Project Link: [https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Data](https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Data)
@@ -295,6 +347,7 @@ Project Link: [https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Da
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [buymecoffee]: https://www.buymeacoffee.com/patrickvorgers
 [buymecoffeebadge]: https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png
 [commits-shield]: https://img.shields.io/github/commit-activity/y/patrickvorgers/Home-Assistant-Import-Energy-Data.svg?style=for-the-badge
@@ -305,4 +358,3 @@ Project Link: [https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Da
 [maintenance-shield]: https://img.shields.io/badge/maintainer-patrickvorgers-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/patrickvorgers/Home-Assistant-Import-Energy-Data.svg?style=for-the-badge
 [releases]: https://github.com/patrickvorgers/Home-Assistant-Import-Energy-Data/releases
-

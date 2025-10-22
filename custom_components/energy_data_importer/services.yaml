@@ -1,0 +1,125 @@
+# Service definitions for Energy Data Importer
+
+prepare_data:
+  name: Prepare energy data
+  description: Prepare energy data from a specific data source for import into Home Assistant.
+  fields:
+    data_source:
+      name: Data source
+      description: The name of the energy data source (e.g., "Eneco", "Fluvius", "SolarEdge", etc.)
+      required: true
+      example: "Eneco"
+      selector:
+        select:
+          options:
+            - "Ameren Electric"
+            - "Domoticz"
+            - "DSMR-reader"
+            - "E-REDES"
+            - "Eneco"
+            - "Enel Distribuzione"
+            - "EnergyControl"
+            - "Engie"
+            - "Enphase"
+            - "Fluvius"
+            - "GreenChoice"
+            - "Home Assistant"
+            - "HomeWizard"
+            - "iSolarCloud"
+            - "Liander"
+            - "MeterN"
+            - "Myenergi Zappi"
+            - "NEM12"
+            - "NextEnergy"
+            - "Oxxio"
+            - "P1mon"
+            - "Shelly EM3"
+            - "SlimmeMeterPortal"
+            - "SMA"
+            - "SolarEdge"
+            - "Solarman"
+            - "Solax"
+            - "United Power"
+            - "VanOns"
+            - "Xcel Energy"
+            - "Zonneplan"
+    input_file:
+      name: Input file
+      description: Path to the input file(s) from your data source (supports wildcards)
+      required: true
+      example: "/config/data/imports/raw/*.csv"
+      selector:
+        text:
+    output_prefix:
+      name: Output prefix
+      description: Optional prefix to add to output file names
+      required: false
+      example: "my_meter"
+      selector:
+        text:
+
+import_data:
+  name: Import energy data
+  description: Import prepared CSV energy data into the Home Assistant database.
+  fields:
+    db_type:
+      name: Database type
+      description: Type of database (sqlite or mariadb)
+      required: true
+      default: "sqlite"
+      example: "sqlite"
+      selector:
+        select:
+          options:
+            - "sqlite"
+            - "mariadb"
+    sqlite_db:
+      name: SQLite database path
+      description: Path to SQLite database file (required for SQLite)
+      required: false
+      example: "/config/home-assistant_v2.db"
+      selector:
+        text:
+    mariadb_host:
+      name: MariaDB host
+      description: MariaDB host address (required for MariaDB)
+      required: false
+      default: "localhost"
+      example: "localhost"
+      selector:
+        text:
+    mariadb_user:
+      name: MariaDB user
+      description: MariaDB username (required for MariaDB)
+      required: false
+      example: "homeassistant"
+      selector:
+        text:
+    mariadb_password:
+      name: MariaDB password
+      description: MariaDB password (required for MariaDB)
+      required: false
+      selector:
+        text:
+    mariadb_database:
+      name: MariaDB database
+      description: MariaDB database name (required for MariaDB)
+      required: false
+      example: "homeassistant"
+      selector:
+        text:
+    input_file:
+      name: Input file
+      description: Path to prepared CSV file(s) (supports wildcards)
+      required: true
+      example: "/config/data/energy/csv/*_high_resolution.csv"
+      selector:
+        text:
+    auto_backup:
+      name: Automatic backup
+      description: Automatically create a timestamped backup of the database before import (recommended)
+      required: false
+      default: true
+      example: true
+      selector:
+        boolean:

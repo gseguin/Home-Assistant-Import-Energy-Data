@@ -1,0 +1,16 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Energy Data Importer",
+        "description": "Import historical energy/water data from external data sources into Home Assistant.\n\n**Important**: This integration directly modifies your Home Assistant database. Always have a recent backup before using this integration!\n\n**Multiple Instances**: You can add multiple instances to organize imports from different data sources (e.g., 'Grid Energy', 'Solar', 'Gas').\n\nFor detailed documentation, see: {docs_url}",
+        "data": {
+          "instance_name": "Instance name (e.g., 'Grid Energy', 'Solar', 'Gas')"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "An Energy Data Importer instance with this name is already configured"
+    }
+  }
+}
